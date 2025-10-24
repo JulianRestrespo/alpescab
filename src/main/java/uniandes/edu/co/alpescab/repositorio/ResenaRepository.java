@@ -2,20 +2,22 @@ package uniandes.edu.co.alpescab.repositorio;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import uniandes.edu.co.alpescab.modelo.Resena;
-import uniandes.edu.co.alpescab.modelo.ResenaPK;
 
-public interface ResenaRepository extends JpaRepository<Resena, ResenaPK> {
+public interface ResenaRepository extends JpaRepository<Resena, Long> {
 
     @Query(value = "SELECT * FROM RESENA", nativeQuery = true)
     Collection<Resena> todas();
 
+    // Busca por la pareja única (ID_VIAJE, ID_AUTOR)
     @Query(value = "SELECT * FROM RESENA WHERE ID_VIAJE = :idViaje AND ID_AUTOR = :idAutor", nativeQuery = true)
-    Resena porPK(@Param("idViaje") Long idViaje, @Param("idAutor") Long idAutor);
+    Optional<Resena> porViajeYAutor(@Param("idViaje") Long idViaje, @Param("idAutor") Long idAutor);
 
     @Modifying @Transactional
     @Query(value = """
@@ -31,8 +33,10 @@ public interface ResenaRepository extends JpaRepository<Resena, ResenaPK> {
     @Modifying @Transactional
     @Query(value = """
         UPDATE RESENA
-           SET ID_OBJETIVO=:idObjetivo, CALIFICACION=:calificacion, COMENTARIO=:comentario
-         WHERE ID_VIAJE=:idViaje AND ID_AUTOR=:idAutor
+           SET ID_OBJETIVO = :idObjetivo,
+               CALIFICACION = :calificacion,
+               COMENTARIO   = :comentario
+         WHERE ID_VIAJE = :idViaje AND ID_AUTOR = :idAutor
         """, nativeQuery = true)
     void actualizar(@Param("idViaje") Long idViaje,
                     @Param("idAutor") Long idAutor,
@@ -41,6 +45,6 @@ public interface ResenaRepository extends JpaRepository<Resena, ResenaPK> {
                     @Param("comentario") String comentario);
 
     @Modifying @Transactional
-    @Query(value = "DELETE FROM RESENA WHERE ID_VIAJE=:idViaje AND ID_AUTOR=:idAutor", nativeQuery = true)
+    @Query(value = "DELETE FROM RESENA WHERE ID_VIAJE = :idViaje AND ID_AUTOR = :idAutor", nativeQuery = true)
     void eliminar(@Param("idViaje") Long idViaje, @Param("idAutor") Long idAutor);
 }

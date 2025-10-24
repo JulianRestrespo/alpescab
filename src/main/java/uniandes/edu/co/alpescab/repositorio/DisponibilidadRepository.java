@@ -2,6 +2,7 @@ package uniandes.edu.co.alpescab.repositorio;
 
 import java.util.Collection;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import uniandes.edu.co.alpescab.modelo.Disponibilidad;
 
@@ -12,14 +13,6 @@ public interface DisponibilidadRepository extends JpaRepository<Disponibilidad, 
 
     @Query(value = "SELECT * FROM DISPONIBILIDAD WHERE ID_CONDUCTOR = :idConductor", nativeQuery = true)
     Collection<Disponibilidad> porConductor(Long idConductor);
-
-    @Modifying @Transactional
-    @Query(value = """
-        INSERT INTO DISPONIBILIDAD(ID_DISPONIBILIDAD, DIA_SEMANA, HORA_INICIO, HORA_FIN, TIPO_SERVICIO, ID_CONDUCTOR, PLACA_VEHICULO)
-        VALUES(:id, :diaSemana, :horaIni, :horaFin, :tipoServicio, :idConductor, :placaVehiculo)
-        """, nativeQuery = true)
-    void insertar(Long id, String diaSemana, String horaIni, String horaFin, String tipoServicio,
-                  Long idConductor, String placaVehiculo);
 
     @Modifying @Transactional
     @Query(value = """
@@ -44,4 +37,23 @@ public interface DisponibilidadRepository extends JpaRepository<Disponibilidad, 
             OR (HORA_INICIO < :horaIni AND HORA_FIN > :horaFin))
         """, nativeQuery = true)
     int conteoSolapes(Long idConductor, String diaSemana, String horaIni, String horaFin);
+
+    @Query(value = """
+        SELECT COUNT(*) 
+        FROM DISPONIBILIDAD d
+        WHERE d.ID_CONDUCTOR = :idConductor
+        AND d.DIA_SEMANA = :diaSemana
+        AND d.ID_DISPONIBILIDAD <> :idActual
+        AND (
+                (d.HORA_INICIO < :horaFin AND d.HORA_FIN > :horaInicio)
+            )
+    """, nativeQuery = true)
+    int conteoSolapesEdit(
+        @Param("idConductor") Long idConductor,
+        @Param("diaSemana") String diaSemana,
+        @Param("horaInicio") String horaInicio,
+        @Param("horaFin") String horaFin,
+        @Param("idActual") Long idActual
+    );
+
 }

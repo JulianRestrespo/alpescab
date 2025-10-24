@@ -7,12 +7,15 @@ import jakarta.persistence.*;
 public class Ciudad {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_ciudad")
+    @SequenceGenerator(name = "seq_ciudad", sequenceName = "SEQ_CIUDAD", allocationSize = 1)
+    @Column(name = "ID_CIUDAD")
     private Long id;
 
+    @Column(name = "NOMBRE", nullable = false, length = 100)
     private String nombre;
 
-    public Ciudad() {;}
+    public Ciudad() { }
 
     public Ciudad(String nombre) {
         this.nombre = nombre;

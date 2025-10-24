@@ -1,35 +1,33 @@
 package uniandes.edu.co.alpescab.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uniandes.edu.co.alpescab.modelo.Tarjeta;
 import uniandes.edu.co.alpescab.repositorio.TarjetaRepository;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Collection;
 
-@Controller
+@RestController
 public class TarjetaController {
 
     @Autowired
     private TarjetaRepository tarjetaRepository;
 
     @GetMapping("/tarjetas")
-    public String listar(Model model){
-        model.addAttribute("tarjetas", tarjetaRepository.todas());
-        return "tarjetas";
+    public Collection<Tarjeta> listar(){
+        return tarjetaRepository.todas();
     }
 
     @GetMapping("/tarjetas/new")
-    public String form(Model model){
-        model.addAttribute("tarjeta", new Tarjeta());
-        return "tarjetaNuevo";
+    public Tarjeta form(){
+        return new Tarjeta();
     }
 
     @PostMapping("/tarjetas/new/save")
-    public String guardar(@ModelAttribute Tarjeta t){
+    public void guardar(@RequestBody Tarjeta t){
         Long idUsuario = t.getUsuario()!=null ? t.getUsuario().getId() : null;
         LocalDate v = t.getVencimiento();
         tarjetaRepository.insertar(
@@ -39,20 +37,20 @@ public class TarjetaController {
             t.getCvv(),
             idUsuario
         );
-        return "redirect:/tarjetas";
     }
 
     @GetMapping("/tarjetas/{id}/edit")
-    public String editarForm(@PathVariable("id") Long id, Model model){
+    public ResponseEntity<Tarjeta> editarForm(@PathVariable("id") Long id){
         var t = tarjetaRepository.porId(id);
         if(t != null){
-            model.addAttribute("tarjeta", t);
-            return "tarjetaEditar";
-        } else return "redirect:/tarjetas";
+            return ResponseEntity.ok(t);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/tarjetas/{id}/edit/save")
-    public String editarGuardar(@PathVariable("id") Long id, @ModelAttribute Tarjeta t){
+    public void editarGuardar(@PathVariable("id") Long id, @RequestBody Tarjeta t){
         LocalDate v = t.getVencimiento();
         Long idUsuario = t.getUsuario()!=null ? t.getUsuario().getId() : null;
         tarjetaRepository.actualizar(
@@ -63,12 +61,10 @@ public class TarjetaController {
             t.getCvv(),
             idUsuario
         );
-        return "redirect:/tarjetas";
     }
 
     @GetMapping("/tarjetas/{id}/delete")
-    public String eliminar(@PathVariable("id") Long id){
+    public void eliminar(@PathVariable("id") Long id){
         tarjetaRepository.eliminar(id);
-        return "redirect:/tarjetas";
     }
 }

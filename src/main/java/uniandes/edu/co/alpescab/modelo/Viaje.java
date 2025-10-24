@@ -9,27 +9,44 @@ import java.time.LocalDate;
 public class Viaje {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_VIAJE_GEN")
+    @SequenceGenerator(name = "SEQ_VIAJE_GEN", sequenceName = "SEQ_VIAJE", allocationSize = 1)
+    @Column(name = "ID_VIAJE")
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "ID_CONDUCTOR", referencedColumnName = "ID_USUARIO", nullable = false)
     private Usuario conductor;
 
     @ManyToOne
+    @JoinColumn(name = "ID_VEHICULO", referencedColumnName = "ID_VEHICULO", nullable = false)
     private Vehiculo vehiculo;
 
-    private String horaInicio;     
-    private String horaFin;         
-    private BigDecimal distanciaKm;  
-    private BigDecimal costoTotal;   
+    @Column(name = "HORA_INICIO", nullable = false, length = 5)
+    private String horaInicio; // formato "HH:MM"
 
-    @ManyToOne
-    private Servicio servicio;       
+    @Column(name = "HORA_FIN", nullable = false, length = 5)
+    private String horaFin;    // formato "HH:MM"
 
-    private BigDecimal gananciaConductor;  
-    private LocalDate fecha;              
+    @Column(name = "DISTANCIA_KM", nullable = false, precision = 9, scale = 3)
+    private BigDecimal distanciaKm;
 
-    public Viaje() {;}
+    @Column(name = "COSTO_TOTAL", nullable = false, precision = 12, scale = 2)
+    private BigDecimal costoTotal;
+
+    // En la tabla VIAJE, ID_SERVICIO es UNIQUE y FK -> SERVICIO(ID_SERVICIO),
+    // por lo que la relación es 1:1 desde VIAJE hacia SERVICIO.
+    @OneToOne
+    @JoinColumn(name = "ID_SERVICIO", referencedColumnName = "ID_SERVICIO", nullable = false, unique = true)
+    private Servicio servicio;
+
+    @Column(name = "GANANCIA_CONDUCTOR", nullable = false, precision = 12, scale = 2)
+    private BigDecimal gananciaConductor;
+
+    @Column(name = "FECHA", nullable = false)
+    private LocalDate fecha;
+
+    public Viaje() {}
 
     public Viaje(Usuario conductor, Vehiculo vehiculo, String horaInicio, String horaFin,
                  BigDecimal distanciaKm, BigDecimal costoTotal, Servicio servicio,

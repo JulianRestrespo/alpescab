@@ -7,16 +7,22 @@ import jakarta.persistence.*;
 public class Destino {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_destino")
+    @SequenceGenerator(name = "seq_destino", sequenceName = "SEQ_DESTINO", allocationSize = 1)
+    @Column(name = "ID_DESTINO")
     private Long id;
 
+    @Column(name = "NOMBRE", nullable = false, length = 100)
     private String nombre;
+
+    @Column(name = "DESCRIPCION", nullable = false, length = 200)
     private String descripcion;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ID_PUNTO", nullable = false)
     private PuntoGeografico punto;
 
-    public Destino() {;}
+    public Destino() { }
 
     public Destino(String nombre, String descripcion, PuntoGeografico punto) {
         this.nombre = nombre;

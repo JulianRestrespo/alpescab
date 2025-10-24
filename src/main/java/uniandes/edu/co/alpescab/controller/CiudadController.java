@@ -1,56 +1,69 @@
 package uniandes.edu.co.alpescab.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uniandes.edu.co.alpescab.DTO.CiudadDTO;
 import uniandes.edu.co.alpescab.modelo.Ciudad;
 import uniandes.edu.co.alpescab.repositorio.CiudadRepository;
 
-@Controller
+import java.util.Collection;
+import java.util.List;
+
+@RestController
 public class CiudadController {
 
     @Autowired
     private CiudadRepository ciudadRepository;
 
     @GetMapping("/ciudades")
-    public String listar(Model model){
-        model.addAttribute("ciudades", ciudadRepository.todas());
-        return "ciudades";
+    public ResponseEntity<List<CiudadDTO>> listar() {
+        Collection<Ciudad> entidades = ciudadRepository.todas();
+
+        List<CiudadDTO> respuesta = entidades.stream()
+                .map(this::toDTO)
+                .toList();
+
+        return ResponseEntity.ok(respuesta);
     }
 
     @GetMapping("/ciudades/new")
-    public String form(Model model){
-        model.addAttribute("ciudad", new Ciudad());
-        return "ciudadNuevo";
+    public CiudadDTO form() {
+        return new CiudadDTO(null, null);
     }
 
     @PostMapping("/ciudades/new/save")
-    public String guardar(@ModelAttribute Ciudad c){
-        ciudadRepository.insertar(c.getNombre()); // <- tu firma
-        return "redirect:/ciudades";
+    public ResponseEntity<Void> guardar(@RequestBody Ciudad c) {
+        ciudadRepository.insertar(c.getNombre());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/ciudades/{id}/edit")
-    public String editarForm(@PathVariable("id") Long id, Model model){
-        var c = ciudadRepository.porId(id);
-        if(c != null){
-            model.addAttribute("ciudad", c);
-            return "ciudadEditar";
+    public ResponseEntity<CiudadDTO> editarForm(@PathVariable("id") Long id) {
+        Ciudad c = ciudadRepository.porId(id);
+        if (c != null) {
+            return ResponseEntity.ok(toDTO(c));
         } else {
-            return "redirect:/ciudades";
+            return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping("/ciudades/{id}/edit/save")
-    public String editarGuardar(@PathVariable("id") Long id, @ModelAttribute Ciudad c){
+    public ResponseEntity<Void> editarGuardar(@PathVariable("id") Long id, @RequestBody Ciudad c) {
         ciudadRepository.actualizar(id, c.getNombre());
-        return "redirect:/ciudades";
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/ciudades/{id}/delete")
-    public String eliminar(@PathVariable("id") Long id){
+    public ResponseEntity<Void> eliminar(@PathVariable("id") Long id) {
         ciudadRepository.eliminar(id);
-        return "redirect:/ciudades";
+        return ResponseEntity.ok().build();
+    }
+
+    private CiudadDTO toDTO(Ciudad c) {
+        return new CiudadDTO(
+                c.getId(),
+                c.getNombre()
+        );
     }
 }

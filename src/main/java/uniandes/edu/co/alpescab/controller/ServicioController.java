@@ -1,74 +1,132 @@
 package uniandes.edu.co.alpescab.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uniandes.edu.co.alpescab.DTO.CiudadDTO;
+import uniandes.edu.co.alpescab.DTO.PuntoGeograficoDTO;
+import uniandes.edu.co.alpescab.DTO.ServicioDTO;
+import uniandes.edu.co.alpescab.DTO.UsuarioDTO;
+import uniandes.edu.co.alpescab.modelo.Ciudad;
+import uniandes.edu.co.alpescab.modelo.PuntoGeografico;
 import uniandes.edu.co.alpescab.modelo.Servicio;
+import uniandes.edu.co.alpescab.modelo.Usuario;
 import uniandes.edu.co.alpescab.repositorio.ServicioRepository;
 
-@Controller
+import java.util.Collection;
+import java.util.List;
+
+@RestController
 public class ServicioController {
 
     @Autowired
     private ServicioRepository servicioRepository;
 
     @GetMapping("/servicios")
-    public String listar(Model model){
-        model.addAttribute("servicios", servicioRepository.todos());
-        return "servicios";
+    public ResponseEntity<List<ServicioDTO>> listar() {
+        Collection<Servicio> entidades = servicioRepository.todos();
+
+        List<ServicioDTO> respuesta = entidades.stream()
+                .map(this::toServicioDTO)
+                .toList();
+
+        return ResponseEntity.ok(respuesta);
     }
 
     @GetMapping("/servicios/new")
-    public String form(Model model){
-        model.addAttribute("servicio", new Servicio());
-        return "servicioNuevo";
+    public ServicioDTO form() {
+        return new ServicioDTO(
+                null,
+                null,
+                null,
+                null,
+                null
+        );
     }
 
     @PostMapping("/servicios/new/save")
-    public String guardar(@ModelAttribute Servicio s){
+    public ResponseEntity<Void> guardar(@RequestBody Servicio s) {
         Long idCliente = (s.getCliente() != null) ? s.getCliente().getId() : null;
         Long idOrigen  = (s.getOrigen()  != null) ? s.getOrigen().getId()  : null;
 
         servicioRepository.insertar(
-            s.getId(),
-            s.getTipoServicio(),
-            s.getEstado(),
-            idCliente,
-            idOrigen
+                s.getId(),
+                s.getTipoServicio(),
+                s.getEstado(),
+                idCliente,
+                idOrigen
         );
-        return "redirect:/servicios";
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/servicios/{id}/edit")
-    public String editarForm(@PathVariable("id") Long id, Model model){
-        var s = servicioRepository.porId(id);
-        if(s != null){
-            model.addAttribute("servicio", s);
-            return "servicioEditar";
+    public ResponseEntity<ServicioDTO> editarForm(@PathVariable("id") Long id){
+        Servicio s = servicioRepository.porId(id);
+        if (s != null) {
+            return ResponseEntity.ok(toServicioDTO(s));
         } else {
-            return "redirect:/servicios";
+            return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping("/servicios/{id}/edit/save")
-    public String editarGuardar(@PathVariable("id") Long id, @ModelAttribute Servicio s){
+    public ResponseEntity<Void> editarGuardar(@PathVariable("id") Long id, @RequestBody Servicio s){
         Long idCliente = (s.getCliente() != null) ? s.getCliente().getId() : null;
         Long idOrigen  = (s.getOrigen()  != null) ? s.getOrigen().getId()  : null;
 
         servicioRepository.actualizar(
-            id,
-            s.getTipoServicio(),
-            s.getEstado(),
-            idCliente,
-            idOrigen
+                id,
+                s.getTipoServicio(),
+                s.getEstado(),
+                idCliente,
+                idOrigen
         );
-        return "redirect:/servicios";
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/servicios/{id}/delete")
-    public String eliminar(@PathVariable("id") Long id){
+    public ResponseEntity<Void> eliminar(@PathVariable("id") Long id){
         servicioRepository.eliminar(id);
-        return "redirect:/servicios";
+        return ResponseEntity.ok().build();
+    }
+
+    private ServicioDTO toServicioDTO(Servicio s) {
+        return new ServicioDTO(
+                s.getId(),
+                s.getTipoServicio(),
+                s.getEstado(),
+                toUsuarioDTO(s.getCliente()),
+                toPuntoGeograficoDTO(s.getOrigen())
+        );
+    }
+
+    private UsuarioDTO toUsuarioDTO(Usuario u) {
+        if (u == null) return null;
+        return new UsuarioDTO(
+                u.getId(),
+                u.getNombre(),
+                u.getEmail(),
+                u.getRol()
+        );
+    }
+
+    private PuntoGeograficoDTO toPuntoGeograficoDTO(PuntoGeografico p) {
+        if (p == null) return null;
+        return new PuntoGeograficoDTO(
+                p.getId(),
+                p.getLatitud(),
+                p.getLongitud(),
+                toCiudadDTO(p.getCiudad())
+        );
+    }
+
+    private CiudadDTO toCiudadDTO(Ciudad c) {
+        if (c == null) return null;
+        return new CiudadDTO(
+                c.getId(),
+                c.getNombre()
+        );
     }
 }

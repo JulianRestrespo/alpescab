@@ -7,23 +7,38 @@ import jakarta.persistence.*;
 public class Vehiculo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_VEHICULO_GEN")
+    @SequenceGenerator(name = "SEQ_VEHICULO_GEN", sequenceName = "SEQ_VEHICULO", allocationSize = 1)
+    @Column(name = "ID_VEHICULO")
     private Long id;
 
+    @Column(name = "PLACA_VEHICULO", nullable = false, length = 10, unique = true)
     private String placaVehiculo;
-    private String tipo;
+
+    @Column(name = "TIPO", nullable = false, length = 20)
+    private String tipo; // DB tiene CHECK ('carro','camioneta','motocicleta','van')
+
+    @Column(name = "MARCA", nullable = false, length = 50)
     private String marca;
+
+    @Column(name = "MODELO", nullable = false, length = 50)
     private String modelo;
+
+    @Column(name = "COLOR", nullable = false, length = 30)
     private String color;
+
+    @Column(name = "CAPACIDAD", nullable = false)
     private Integer capacidad;
 
     @ManyToOne
+    @JoinColumn(name = "CIUDAD_EXPEDICION", referencedColumnName = "ID_CIUDAD")
     private Ciudad ciudadExpedicion;
 
     @ManyToOne
+    @JoinColumn(name = "ID_CONDUCTOR", referencedColumnName = "ID_USUARIO", nullable = false)
     private Usuario conductor;
 
-    public Vehiculo() {;}
+    public Vehiculo() {}
 
     public Vehiculo(String placaVehiculo, String tipo, String marca, String modelo, String color,
                     Integer capacidad, Ciudad ciudadExpedicion, Usuario conductor) {

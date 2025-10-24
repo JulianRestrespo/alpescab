@@ -7,19 +7,26 @@ import jakarta.persistence.*;
 public class Servicio {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_SERVICIO_GEN")
+    @SequenceGenerator(name = "SEQ_SERVICIO_GEN", sequenceName = "SEQ_SERVICIO", allocationSize = 1)
+    @Column(name = "ID_SERVICIO")
     private Long id;
 
-    private String estado;        
-    private String tipoServicio;  
+    @Column(name = "ESTADO", nullable = false, length = 20)
+    private String estado;
+
+    @Column(name = "TIPO_SERVICIO", nullable = false, length = 15)
+    private String tipoServicio;
 
     @ManyToOne
+    @JoinColumn(name = "ID_CLIENTE", referencedColumnName = "ID_USUARIO", nullable = false)
     private Usuario cliente;
 
     @ManyToOne
+    @JoinColumn(name = "ID_ORIGEN", referencedColumnName = "ID_PUNTO", nullable = false)
     private PuntoGeografico origen;
 
-    public Servicio() {;}
+    public Servicio() { }
 
     public Servicio(String estado, String tipoServicio, Usuario cliente, PuntoGeografico origen) {
         this.estado = estado;

@@ -1,0 +1,1051 @@
+{
+	"info": {
+		"_postman_id": "12bb3195-ec11-49db-8727-254753398e61",
+		"name": "PruebasRF",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41559649"
+	},
+	"item": [
+		{
+			"name": "Registrar Ciudad",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 o 204 en creación\", function () {\r",
+							"  pm.expect([200,204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"nombre\": \"Cúcuta\" }\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/ciudades/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"ciudades",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener ciudades",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 en listar\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/ciudades",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"ciudades"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Registrar ciudad duplicada",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Falla esperada al intentar duplicado\", function () {\r",
+							"  pm.expect([400,409,500]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"nombre\": \"Cúcuta\" }\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/ciudades/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"ciudades",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear Usuario",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 o 204 en creación de usuario\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"cedula\": \"1020304050\",\r\n  \"email\": \"juan.perez@example.com\",\r\n  \"celular\": \"3001234567\",\r\n  \"nombre\": \"Juan Pérez\",\r\n  \"rol\": \"pasajero\"\r\n}\r\n\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/usuarios/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"usuarios",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar usuarios",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 al listar usuarios\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/usuarios",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear conductor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 o 204 en creación de conductor\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"cedula\": \"1122334455\",\r\n  \"email\": \"carlos.lopez@example.com\",\r\n  \"celular\": \"3109876543\",\r\n  \"nombre\": \"Carlos López\",\r\n  \"rol\": \"conductor\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/usuarios/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"usuarios",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar usuarios Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 al listar usuarios\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/usuarios",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear vehiculo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 o 204 en creación de vehículo\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"placaVehiculo\": \"ABC123\",\r\n  \"tipo\": \"carro\",\r\n  \"marca\": \"Toyota\",\r\n  \"modelo\": \"2022\",\r\n  \"color\": \"Negro\",\r\n  \"capacidad\": 4,\r\n  \"ciudadExpedicion\": { \"id\": 1 },\r\n  \"conductor\": { \"id\": 2 }\r\n}\r\n\r\n\r\n\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/vehiculos/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"vehiculos",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar vehiculos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 al listar vehículos\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/vehiculos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"vehiculos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear disponibilidad",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 o 204 en creación de disponibilidad\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"diaSemana\": \"lunes\",\r\n  \"horaInicio\": \"08:00\",\r\n  \"horaFin\": \"12:00\",\r\n  \"tipoServicio\": \"pasajeros\",\r\n  \"conductor\": { \"id\": 2 },\r\n  \"placaVehiculo\": \"ABC123\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/disponibilidades/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"disponibilidades",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear disponibilidad 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 o 204 en creación de disponibilidad\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"diaSemana\": \"lunes\",\r\n  \"horaInicio\": \"05:00\",\r\n  \"horaFin\": \"07:00\",\r\n  \"tipoServicio\": \"pasajeros\",\r\n  \"conductor\": { \"id\": 2 },\r\n  \"placaVehiculo\": \"ABC123\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/disponibilidades/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"disponibilidades",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listas disponibilidades",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 al listar disponibilidades\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/disponibilidades",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"disponibilidades"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "actualizar disponibilidad valida",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 o 204 en actualización SIN solape (RF6)\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"diaSemana\": \"lunes\",\r\n  \"horaInicio\": \"09:00\",\r\n  \"horaFin\": \"13:00\",\r\n  \"tipoServicio\": \"pasajeros\",\r\n  \"placaVehiculo\": \"ABC123\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/disponibilidades/{{dispId1}}/edit/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"disponibilidades",
+						"{{dispId1}}",
+						"edit",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "actualizar disponibilidad no valida",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Falla esperada (400/409/500) al intentar actualización CON solape (RF6)\", function () {\r",
+							"  pm.expect([400, 409, 500]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"diaSemana\": \"lunes\",\r\n  \"horaInicio\": \"05:00\",\r\n  \"horaFin\": \"07:00\",\r\n  \"tipoServicio\": \"pasajeros\",\r\n  \"placaVehiculo\": \"ABC123\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/disponibilidades/{{dispId1}}/edit/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"disponibilidades",
+						"{{dispId1}}",
+						"edit",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear Punto",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 o 204 en creación de punto\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"latitud\": 6.251840,\r\n  \"longitud\": -75.563590,\r\n  \"idCiudad\": 1\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/puntos/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"puntos",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Puntos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 al listar puntos\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/puntos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"puntos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear servicio",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"RF8 - Servicio creado (200/204)\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 1001,\r\n  \"tipoServicio\": \"pasajeros\",\r\n  \"estado\": \"solicitado\",\r\n  \"cliente\": { \"id\": 1 },\r\n  \"origen\":  { \"id\": 1 }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/servicios/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"servicios",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear Destino",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"RF8 - Destino registrado (200/204)\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Oficina Centro\",\r\n  \"descripcion\": \"Entrada por la Av. Principal, piso 3\",\r\n  \"punto\": { \"id\": 1 }\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/destinos/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"destinos",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear Transporte Pasajeros",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"RF8 - Modalidad pasajeros creada (200/204)\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"servicio\": { \"id\": 1001 },\r\n  \"nivel\": \"Estandar\",\r\n  \"numeroPasajeros\": 2,\r\n  \"destino\": { \"id\": 1 }\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/transportePasajeros/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"transportePasajeros",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar servicios",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"RF8 - Listar servicios (200)\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/servicios",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"servicios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear viaje",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"RF9 - Viaje creado (200/204)\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"conductor\": { \"id\": 2 },\r\n  \"vehiculo\":  { \"id\": 1 },\r\n  \"horaInicio\": \"08:00\",\r\n  \"horaFin\":    \"08:45\",\r\n  \"distanciaKm\": 12.4,\r\n  \"costoTotal\": 31000.00,\r\n  \"servicio\":  { \"id\": 1001 },\r\n  \"gananciaConductor\": 23000.00,\r\n  \"fecha\": \"2025-10-23\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/viajes/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"viajes",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Viajes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"RF9 - Listar viajes (200)\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/viajes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"viajes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear reseña",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"RF10 - Crear reseña (200/204)\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"viaje\":    { \"id\": 1 },\r\n  \"autor\":    { \"id\": 1 },     // usuario cliente (quien califica)\r\n  \"objetivo\": { \"id\": 2 },     // usuario conductor (quien recibe la calificación)\r\n  \"calificacion\": 4.5,\r\n  \"comentario\": \"Muy buen servicio.\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/resenas/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"resenas",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear reseña 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"RF10 - Crear reseña (200/204)\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"viaje\":    { \"id\": 1 },\r\n  \"autor\":    { \"id\": 2 },     // conductor\r\n  \"objetivo\": { \"id\": 1 },     // cliente\r\n  \"calificacion\": 5.0,\r\n  \"comentario\": \"Pasajero puntual y amable.\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/resenas/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"resenas",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Reseñas",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"RF10 - Crear reseña (200/204)\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/resenas",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"resenas"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

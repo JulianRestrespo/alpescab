@@ -1,38 +1,64 @@
 package uniandes.edu.co.alpescab.modelo;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "RESENA")
+@Table(
+    name = "RESENA",
+    uniqueConstraints = @UniqueConstraint(name = "UQ_RESENA_AUTOR_VIAJE", columnNames = {"ID_VIAJE","ID_AUTOR"})
+)
 public class Resena {
 
-    @EmbeddedId
-    private ResenaPK pk;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_RESENA_GEN")
+    @SequenceGenerator(name = "SEQ_RESENA_GEN", sequenceName = "SEQ_RESENA", allocationSize = 1)
+    @Column(name = "ID_RESENA")
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_OBJETIVO", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ID_VIAJE", nullable = false)
+    private Viaje viaje;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ID_AUTOR", nullable = false)
+    private Usuario autor;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ID_OBJETIVO", nullable = false)
     private Usuario objetivo;
 
-    private BigDecimal calificacion; 
+    @DecimalMin("0.0")
+    @DecimalMax("5.0")
+    @Column(name = "CALIFICACION", precision = 2, scale = 1, nullable = false)
+    private BigDecimal calificacion;
+
+    @Column(name = "COMENTARIO", length = 500, nullable = false)
     private String comentario;
 
-    public Resena() {;}
+    public Resena() {}
 
     public Resena(Viaje viaje, Usuario autor, Usuario objetivo,
                   BigDecimal calificacion, String comentario) {
-        this.pk = new ResenaPK(viaje, autor);
+        this.viaje = viaje;
+        this.autor = autor;
         this.objetivo = objetivo;
         this.calificacion = calificacion;
         this.comentario = comentario;
     }
 
-    public ResenaPK getPk() { return pk; }
+    public Long getId() { return id; }
+    public Viaje getViaje() { return viaje; }
+    public Usuario getAutor() { return autor; }
     public Usuario getObjetivo() { return objetivo; }
     public BigDecimal getCalificacion() { return calificacion; }
     public String getComentario() { return comentario; }
 
-    public void setPk(ResenaPK pk) { this.pk = pk; }
+    public void setId(Long id) { this.id = id; }
+    public void setViaje(Viaje viaje) { this.viaje = viaje; }
+    public void setAutor(Usuario autor) { this.autor = autor; }
     public void setObjetivo(Usuario objetivo) { this.objetivo = objetivo; }
     public void setCalificacion(BigDecimal calificacion) { this.calificacion = calificacion; }
     public void setComentario(String comentario) { this.comentario = comentario; }

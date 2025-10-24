@@ -1,60 +1,104 @@
 package uniandes.edu.co.alpescab.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uniandes.edu.co.alpescab.DTO.CiudadDTO;
+import uniandes.edu.co.alpescab.DTO.PuntoGeograficoCreateDTO;
+import uniandes.edu.co.alpescab.DTO.PuntoGeograficoDTO;
+import uniandes.edu.co.alpescab.modelo.Ciudad;
 import uniandes.edu.co.alpescab.modelo.PuntoGeografico;
 import uniandes.edu.co.alpescab.repositorio.PuntoGeograficoRepository;
 
-@Controller
+import java.util.Collection;
+import java.util.List;
+
+@RestController
 public class PuntoGeograficoController {
 
     @Autowired
     private PuntoGeograficoRepository puntoRepository;
 
     @GetMapping("/puntos")
-    public String listar(Model model){
-        model.addAttribute("puntos", puntoRepository.todos());
-        return "puntos";
+    public ResponseEntity<List<PuntoGeograficoDTO>> listar() {
+        Collection<PuntoGeografico> entidades = puntoRepository.todos();
+
+        List<PuntoGeograficoDTO> respuesta = entidades.stream()
+                .map(this::toDTO)
+                .toList();
+
+        return ResponseEntity.ok(respuesta);
     }
 
-    @GetMapping("/puntos/new")
-    public String form(Model model){
-        model.addAttribute("punto", new PuntoGeografico());
-        return "puntoNuevo";
-    }
 
     @PostMapping("/puntos/new/save")
-    public String guardar(@ModelAttribute PuntoGeografico p){
+    public ResponseEntity<Void> guardar(@RequestBody PuntoGeograficoCreateDTO body) {
+        if (body.getIdCiudad() == null ||
+            body.getLatitud() == null ||
+            body.getLongitud() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         puntoRepository.insertar(
-            p.getLatitud(), p.getLongitud(),
-            p.getCiudad() != null ? p.getCiudad().getId() : null
+                body.getLatitud(),
+                body.getLongitud(),
+                body.getIdCiudad()
         );
-        return "redirect:/puntos";
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/puntos/{id}/edit")
-    public String editarForm(@PathVariable("id") Long id, Model model){
-        var p = puntoRepository.porId(id);
-        if(p != null){
-            model.addAttribute("punto", p);
-            return "puntoEditar";
-        } else return "redirect:/puntos";
+    public ResponseEntity<PuntoGeograficoDTO> editarForm(@PathVariable("id") Long id) {
+        PuntoGeografico p = puntoRepository.porId(id);
+        if (p != null) {
+            return ResponseEntity.ok(toDTO(p));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/puntos/{id}/edit/save")
-    public String editarGuardar(@PathVariable("id") Long id, @ModelAttribute PuntoGeografico p){
+    public ResponseEntity<Void> editarGuardar(
+            @PathVariable("id") Long id,
+            @RequestBody PuntoGeograficoCreateDTO body) {
+
+        if (body.getIdCiudad() == null ||
+            body.getLatitud() == null ||
+            body.getLongitud() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         puntoRepository.actualizar(
-            id, p.getLatitud(), p.getLongitud(),
-            p.getCiudad() != null ? p.getCiudad().getId() : null
+                id,
+                body.getLatitud(),
+                body.getLongitud(),
+                body.getIdCiudad()
         );
-        return "redirect:/puntos";
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/puntos/{id}/delete")
-    public String eliminar(@PathVariable("id") Long id){
+    public ResponseEntity<Void> eliminar(@PathVariable("id") Long id) {
         puntoRepository.eliminar(id);
-        return "redirect:/puntos";
+        return ResponseEntity.ok().build();
+    }
+
+    private PuntoGeograficoDTO toDTO(PuntoGeografico p) {
+        return new PuntoGeograficoDTO(
+                p.getId(),
+                p.getLatitud(),
+                p.getLongitud(),
+                toCiudadDTO(p.getCiudad())
+        );
+    }
+
+    private CiudadDTO toCiudadDTO(Ciudad c) {
+        if (c == null) return null;
+        return new CiudadDTO(
+                c.getId(),
+                c.getNombre()
+        );
     }
 }

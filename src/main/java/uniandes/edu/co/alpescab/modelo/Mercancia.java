@@ -7,17 +7,22 @@ import jakarta.persistence.*;
 public class Mercancia {
 
     @Id
-    private Long id;    
+    @Column(name = "ID_SERVICIO")
+    private Long id; 
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @MapsId
+    @JoinColumn(name = "ID_SERVICIO", nullable = false)
     private Servicio servicio;
 
+    @Column(name = "DESCRIPCION_PRODUCTO", nullable = false, length = 200)
     private String descripcionProducto;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ID_DESTINO", nullable = false)
     private Destino destino;
 
-    public Mercancia() {;}
+    public Mercancia() {}
 
     public Mercancia(Servicio servicio, String descripcionProducto, Destino destino) {
         this.servicio = servicio;

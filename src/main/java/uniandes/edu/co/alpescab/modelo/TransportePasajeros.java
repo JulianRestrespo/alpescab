@@ -6,19 +6,27 @@ import jakarta.persistence.*;
 @Table(name = "TRANSPORTE_PASAJEROS")
 public class TransportePasajeros {
 
+    // La PK es ID_SERVICIO (compartida con Servicio)
     @Id
-    private Long id;  
+    @Column(name = "ID_SERVICIO")
+    private Long id;
 
-    @OneToOne
+    @OneToOne(optional = false)
+    @MapsId                               // comparte la PK con Servicio
+    @JoinColumn(name = "ID_SERVICIO", referencedColumnName = "ID_SERVICIO")
     private Servicio servicio;
 
-    private String nivel;           
+    @Column(name = "NIVEL", nullable = false, length = 20)
+    private String nivel;                 // 'Estandar' | 'Comfort' | 'Large'
+
+    @Column(name = "NUMERO_PASAJEROS", nullable = false)
     private Integer numeroPasajeros;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ID_DESTINO", referencedColumnName = "ID_DESTINO")
     private Destino destino;
 
-    public TransportePasajeros() {;}
+    public TransportePasajeros() {}
 
     public TransportePasajeros(Servicio servicio, String nivel, Integer numeroPasajeros, Destino destino) {
         this.servicio = servicio;

@@ -8,18 +8,33 @@ import java.time.LocalDate;
 public class Tarjeta {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TARJETA_GEN")
+    @SequenceGenerator(name = "SEQ_TARJETA_GEN", sequenceName = "SEQ_TARJETA", allocationSize = 1)
+    @Column(name = "ID_TARJETA")
     private Long id;
 
+    @Column(name = "NUMERO", nullable = false, length = 25)
     private String numero;
+
+    @Column(name = "NOMBRE_TARJETA", nullable = false, length = 100)
     private String nombreTarjeta;
+
+    @Column(name = "VENCIMIENTO", nullable = false)
     private LocalDate vencimiento;
+
+    @Column(name = "CVV", nullable = false, length = 4)
     private String cvv;
 
     @OneToOne
+    @JoinColumn(
+        name = "ID_USUARIO",
+        referencedColumnName = "ID_USUARIO",
+        nullable = false,
+        unique = true
+    )
     private Usuario usuario;
 
-    public Tarjeta() {;}
+    public Tarjeta() {}
 
     public Tarjeta(String numero, String nombreTarjeta, LocalDate vencimiento, String cvv, Usuario usuario) {
         this.numero = numero;

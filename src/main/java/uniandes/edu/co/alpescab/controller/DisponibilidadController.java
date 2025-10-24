@@ -1,66 +1,108 @@
 package uniandes.edu.co.alpescab.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uniandes.edu.co.alpescab.modelo.Disponibilidad;
 import uniandes.edu.co.alpescab.repositorio.DisponibilidadRepository;
 
-@Controller
+import java.util.Collection;
+
+@RestController
 public class DisponibilidadController {
 
     @Autowired
     private DisponibilidadRepository disponibilidadRepository;
 
     @GetMapping("/disponibilidades")
-    public String listar(Model model){
-        model.addAttribute("disponibilidades", disponibilidadRepository.porConductor(null));  
-        return "disponibilidades";
+    public Collection<Disponibilidad> listar(){
+        return disponibilidadRepository.porConductor(null);
     }
 
     @GetMapping("/disponibilidades/new")
-    public String form(Model model){
-        model.addAttribute("disponibilidad", new Disponibilidad());
-        return "disponibilidadNuevo";
+    public Disponibilidad form(){
+        return new Disponibilidad();
     }
 
     @PostMapping("/disponibilidades/new/save")
-    public String guardar(@ModelAttribute Disponibilidad d){
+    public ResponseEntity<?> guardar(@RequestBody Disponibilidad d){
+
+        d.setDiaSemana(d.getDiaSemana().toLowerCase());
+        d.setTipoServicio(d.getTipoServicio().toLowerCase());
+
         Long idConductor = d.getConductor() != null ? d.getConductor().getId() : null;
 
         int solapes = disponibilidadRepository.conteoSolapes(
-            idConductor, d.getDiaSemana(), d.getHoraInicio(), d.getHoraFin());
-        if (solapes > 0) return "redirect:/disponibilidades"; // o una vista de error
-
-        disponibilidadRepository.insertar(
-            d.getId(), d.getDiaSemana(), d.getHoraInicio(), d.getHoraFin(),
-            d.getTipoServicio(), idConductor, d.getPlacaVehiculo()
+            idConductor,
+            d.getDiaSemana(),
+            d.getHoraInicio(),
+            d.getHoraFin()
         );
-        return "redirect:/disponibilidades";
+        if (solapes > 0) {
+            return ResponseEntity.status(409)
+                .body("Ya existe disponibilidad en ese horario para ese conductor");
+        }
+
+        Disponibilidad creada = disponibilidadRepository.save(d);
+
+        return ResponseEntity.ok(creada.getId());
     }
 
     @GetMapping("/disponibilidades/{id}/edit")
-    public String editarForm(@PathVariable("id") Long id, Model model){
+    public ResponseEntity<Disponibilidad> editarForm(@PathVariable("id") Long id){
         var d = disponibilidadRepository.porId(id);
         if(d != null){
-            model.addAttribute("disponibilidad", d);
-            return "disponibilidadEditar";
-        } else return "redirect:/disponibilidades";
+            return ResponseEntity.ok(d);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/disponibilidades/{id}/edit/save")
-    public String editarGuardar(@PathVariable("id") Long id, @ModelAttribute Disponibilidad d){
-        disponibilidadRepository.actualizar(
-            id, d.getDiaSemana(), d.getHoraInicio(), d.getHoraFin(),
-            d.getTipoServicio(), d.getPlacaVehiculo()
+    public ResponseEntity<?> editarGuardar(
+            @PathVariable("id") Long id,
+            @RequestBody Disponibilidad body) {
+
+        Disponibilidad actual = disponibilidadRepository.porId(id);
+        if (actual == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String diaSemana    = body.getDiaSemana().toLowerCase();
+        String horaInicio   = body.getHoraInicio();
+        String horaFin      = body.getHoraFin();
+        String tipoServicio = body.getTipoServicio().toLowerCase();
+        String placa        = body.getPlacaVehiculo();
+
+        Long idConductor = actual.getConductor() != null ? actual.getConductor().getId() : null;
+
+        int solapes = disponibilidadRepository.conteoSolapesEdit(
+            idConductor,
+            diaSemana,
+            horaInicio,
+            horaFin,
+            id
         );
-        return "redirect:/disponibilidades";
+
+        if (solapes > 0) {
+            return ResponseEntity.status(409)
+                .body("No se puede actualizar: el horario se solapa con otra disponibilidad del mismo conductor");
+        }
+
+        disponibilidadRepository.actualizar(
+            id,
+            diaSemana,
+            horaInicio,
+            horaFin,
+            tipoServicio,
+            placa
+        );
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/disponibilidades/{id}/delete")
-    public String eliminar(@PathVariable("id") Long id){
+    public void eliminar(@PathVariable("id") Long id){
         disponibilidadRepository.eliminar(id);
-        return "redirect:/disponibilidades";
     }
 }

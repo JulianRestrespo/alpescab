@@ -7,17 +7,22 @@ import jakarta.persistence.*;
 public class EntregaComida {
 
     @Id
-    private Long id;  
+    @Column(name = "ID_SERVICIO")
+    private Long id;  // Mismo id que Servicio
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @MapsId
+    @JoinColumn(name = "ID_SERVICIO", nullable = false)
     private Servicio servicio;
 
+    @Column(name = "RESTAURANTE", nullable = false, length = 100)
     private String restaurante;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ID_PUNTO_ENTREGA", nullable = false)
     private PuntoGeografico puntoEntrega;
 
-    public EntregaComida() {;}
+    public EntregaComida() {}
 
     public EntregaComida(Servicio servicio, String restaurante, PuntoGeografico puntoEntrega) {
         this.servicio = servicio;
