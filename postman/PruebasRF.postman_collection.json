@@ -179,6 +179,93 @@
 			"response": []
 		},
 		{
+			"name": "Crear Usuario Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 o 204 en creación de usuario\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"cedula\": \"1020304051\",\r\n  \"email\": \"juan.rojas@example.com\",\r\n  \"celular\": \"3001279567\",\r\n  \"nombre\": \"Juan Rojas\",\r\n  \"rol\": \"pasajero\"\r\n}\r\n\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/usuarios/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"usuarios",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear Tarjeta",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Tarjeta creada\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"numero\": \"4111111111111111\",\r\n  \"nombreTarjeta\": \"VISA José Manuel\",\r\n  \"vencimiento\": \"2027-12-01\",\r\n  \"cvv\": \"123\",\r\n  \"usuario\": {\r\n    \"id\": 1\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/tarjetas/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"tarjetas",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Listar usuarios",
 			"event": [
 				{
@@ -707,7 +794,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"id\": 1001,\r\n  \"tipoServicio\": \"pasajeros\",\r\n  \"estado\": \"solicitado\",\r\n  \"cliente\": { \"id\": 1 },\r\n  \"origen\":  { \"id\": 1 }\r\n}\r\n",
+					"raw": "{\r\n  \"tipoServicio\": \"pasajeros\",\r\n  \"estado\": \"solicitado\",\r\n  \"cliente\": { \"id\": 1 },\r\n  \"origen\":  { \"id\": 1 }\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -795,7 +882,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"servicio\": { \"id\": 1001 },\r\n  \"nivel\": \"Estandar\",\r\n  \"numeroPasajeros\": 2,\r\n  \"destino\": { \"id\": 1 }\r\n}\r\n\r\n",
+					"raw": "{\r\n  \"servicio\": { \"id\": 1 },\r\n  \"nivel\": \"Estandar\",\r\n  \"numeroPasajeros\": 2,\r\n  \"destino\": { \"id\": 1 }\r\n}\r\n\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -872,7 +959,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"conductor\": { \"id\": 2 },\r\n  \"vehiculo\":  { \"id\": 1 },\r\n  \"horaInicio\": \"08:00\",\r\n  \"horaFin\":    \"08:45\",\r\n  \"distanciaKm\": 12.4,\r\n  \"costoTotal\": 31000.00,\r\n  \"servicio\":  { \"id\": 1001 },\r\n  \"gananciaConductor\": 23000.00,\r\n  \"fecha\": \"2025-10-23\"\r\n}\r\n\r\n",
+					"raw": "{\r\n  \"conductor\": { \"id\": 2 },\r\n  \"vehiculo\":  { \"id\": 1 },\r\n  \"horaInicio\": \"08:00\",\r\n  \"horaFin\":    \"08:45\",\r\n  \"distanciaKm\": 12.4,\r\n  \"costoTotal\": 31000.00,\r\n  \"servicio\":  { \"id\": 1 },\r\n  \"gananciaConductor\": 23000.00,\r\n  \"fecha\": \"2025-10-23\"\r\n}\r\n\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1042,6 +1129,247 @@
 					],
 					"path": [
 						"resenas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Solicitar Servicio",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Servicio creado y viaje iniciado\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.text()).to.include(\"Servicio creado\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"idCliente\": 1,\r\n  \"idOrigen\": 1,\r\n  \"tipoServicio\": \"pasajeros\",\r\n  \"idDestino\": 1,\r\n  \"nivel\": \"Estandar\",\r\n  \"numeroPasajeros\": 2,\r\n  \"horaInicio\": \"10:30\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/servicios/solicitar",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"servicios",
+						"solicitar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Solicitar Servicio sin tarjeta",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Falla esperada porque cliente no tiene tarjeta para pago\", function () {\r",
+							"  pm.expect([400,409,500]).to.include(pm.response.code);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"idCliente\": 2,\r\n  \"idOrigen\": 1,\r\n  \"tipoServicio\": \"pasajeros\",\r\n  \"idDestino\": 1,\r\n  \"nivel\": \"Estandar\",\r\n  \"numeroPasajeros\": 2,\r\n  \"horaInicio\": \"10:30\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/servicios/solicitar",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"servicios",
+						"solicitar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Solicitar Servicio sin dispinibilidad",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Falla esperada porque no hay disponibilidad\", function () {\r",
+							"  pm.expect([400,409,500]).to.include(pm.response.code);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"idCliente\": 1,\r\n  \"idOrigen\": 1,\r\n  \"tipoServicio\": \"comida\",\r\n  \"idDestino\": 1,\r\n  \"numeroPasajeros\": 2,\r\n  \"horaInicio\": \"10:30\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/servicios/solicitar",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"servicios",
+						"solicitar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Solicitar servicio sin destino",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Falla esperada porque no hay disponibilidad\", function () {\r",
+							"  pm.expect([400,409,500]).to.include(pm.response.code);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"idCliente\": 1,\r\n  \"idOrigen\": 1,\r\n  \"tipoServicio\": \"pasajeros\",\r\n  \"nivel\": \"Estandar\",\r\n  \"numeroPasajeros\": 2,\r\n  \"horaInicio\": \"10:30\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/servicios/solicitar",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"servicios",
+						"solicitar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear conductor Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 o 204 en creación de conductor\", function () {\r",
+							"  pm.expect([200, 204]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"cedula\": \"1155334455\",\r\n  \"email\": \"juan.lopez@example.com\",\r\n  \"celular\": \"3198876543\",\r\n  \"nombre\": \"Juan López\",\r\n  \"rol\": \"conductor\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/usuarios/new/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"usuarios",
+						"new",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "finalizar viaje",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"idConductor\": 2,\r\n  \"horaFin\": \"12:45\",\r\n  \"distanciaKm\": 5,\r\n  \"cerrarServicio\": true\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/viajes/{{idViaje}}/finalizar",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"viajes",
+						"{{idViaje}}",
+						"finalizar"
 					]
 				}
 			},
