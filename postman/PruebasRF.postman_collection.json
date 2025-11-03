@@ -1374,6 +1374,58 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "RC1 read commited",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"conductor\": { \"id\": 2 },\r\n  \"vehiculo\":  { \"id\": 1 },\r\n  \"horaInicio\": \"08:00\",\r\n  \"horaFin\":    \"08:45\",\r\n  \"distanciaKm\": 12.4,\r\n  \"costoTotal\": 31000.00,\r\n  \"servicio\":  { \"id\": 1 },\r\n  \"gananciaConductor\": 23000.00,\r\n  \"fecha\": \"2025-10-23\"\r\n}\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/rfc1/read-committed/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"rfc1",
+						"read-committed",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RC1 serializable",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"conductor\": { \"id\": 2 },\r\n  \"vehiculo\":  { \"id\": 1 },\r\n  \"horaInicio\": \"08:00\",\r\n  \"horaFin\":    \"08:45\",\r\n  \"distanciaKm\": 12.4,\r\n  \"costoTotal\": 31000.00,\r\n  \"servicio\":  { \"id\": 1 },\r\n  \"gananciaConductor\": 23000.00,\r\n  \"fecha\": \"2025-10-23\"\r\n}\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/rfc1/serializable/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"rfc1",
+						"serializable",
+						"1"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
