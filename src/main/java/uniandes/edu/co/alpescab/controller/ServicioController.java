@@ -3,19 +3,44 @@ package uniandes.edu.co.alpescab.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+
 import uniandes.edu.co.alpescab.DTO.CiudadDTO;
 import uniandes.edu.co.alpescab.DTO.PuntoGeograficoDTO;
 import uniandes.edu.co.alpescab.DTO.ServicioDTO;
 import uniandes.edu.co.alpescab.DTO.ServicioHistoricoDTO;
 import uniandes.edu.co.alpescab.DTO.UsuarioDTO;
+import uniandes.edu.co.alpescab.DTO.SolicitarServicioRequestDTO;
+
+import uniandes.edu.co.alpescab.modelo.Ciudad;
+import uniandes.edu.co.alpescab.modelo.Destino;
+import uniandes.edu.co.alpescab.modelo.Disponibilidad;
+import uniandes.edu.co.alpescab.modelo.EntregaComida;
+import uniandes.edu.co.alpescab.modelo.Mercancia;
+import uniandes.edu.co.alpescab.modelo.PuntoGeografico;
+import uniandes.edu.co.alpescab.modelo.Servicio;
+import uniandes.edu.co.alpescab.modelo.Tarjeta;
+import uniandes.edu.co.alpescab.modelo.TransportePasajeros;
+import uniandes.edu.co.alpescab.modelo.Usuario;
+import uniandes.edu.co.alpescab.modelo.Vehiculo;
+
 import uniandes.edu.co.alpescab.repositorio.DestinoRepository;
 import uniandes.edu.co.alpescab.repositorio.DisponibilidadRepository;
 import uniandes.edu.co.alpescab.repositorio.EntregaComidaRepository;
 import uniandes.edu.co.alpescab.repositorio.MercanciaRepository;
 import uniandes.edu.co.alpescab.repositorio.PuntoGeograficoRepository;
 import uniandes.edu.co.alpescab.repositorio.ServicioRepository;
- 
-import java.util.Collection;
+import uniandes.edu.co.alpescab.repositorio.ServicioHistoricoView;
+import uniandes.edu.co.alpescab.repositorio.TarjetaRepository;
+import uniandes.edu.co.alpescab.repositorio.TransportePasajerosRepository;
+import uniandes.edu.co.alpescab.repositorio.UsuarioRepository;
+import uniandes.edu.co.alpescab.repositorio.VehiculoRepository;
+import uniandes.edu.co.alpescab.repositorio.ViajeRepository;
 
 @RestController
 public class ServicioController {
