@@ -6,12 +6,14 @@ import org.springframework.web.bind.annotation.*;
 import uniandes.edu.co.alpescab.DTO.CiudadDTO;
 import uniandes.edu.co.alpescab.DTO.PuntoGeograficoDTO;
 import uniandes.edu.co.alpescab.DTO.ServicioDTO;
+import uniandes.edu.co.alpescab.DTO.ServicioHistoricoDTO;
 import uniandes.edu.co.alpescab.DTO.UsuarioDTO;
 import uniandes.edu.co.alpescab.modelo.Ciudad;
 import uniandes.edu.co.alpescab.modelo.PuntoGeografico;
 import uniandes.edu.co.alpescab.modelo.Servicio;
 import uniandes.edu.co.alpescab.modelo.Usuario;
 import uniandes.edu.co.alpescab.repositorio.ServicioRepository;
+import uniandes.edu.co.alpescab.repositorio.ServicioHistoricoView;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,6 +32,26 @@ public class ServicioController {
                 .map(this::toServicioDTO)
                 .toList();
 
+        return ResponseEntity.ok(respuesta);
+    }
+
+     
+    @GetMapping("/servicios/cliente/{id}/historico")
+    public ResponseEntity<List<ServicioHistoricoDTO>> historicoPorUsuario(@PathVariable("id") Long idUsuario) {
+        Collection<ServicioHistoricoView> rows = servicioRepository.historicoPorUsuario(idUsuario);
+        List<ServicioHistoricoDTO> respuesta = rows.stream()
+                .map(r -> new ServicioHistoricoDTO(
+                        r.getIdServicio(),
+                        r.getTipoServicio(),
+                        r.getEstado(),
+                        r.getCiudadOrigen(),
+                        r.getHoraInicio(),
+                        r.getHoraFin(),
+                        r.getDistanciaKm(),
+                        r.getCostoTotal(),
+                        r.getConductor()
+                ))
+                .toList();
         return ResponseEntity.ok(respuesta);
     }
 
