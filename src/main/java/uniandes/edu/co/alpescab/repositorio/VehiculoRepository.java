@@ -54,4 +54,10 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
     @Modifying @Transactional
     @Query(value = "DELETE FROM VEHICULO WHERE ID_VEHICULO = :id", nativeQuery = true)
     void eliminar(@Param("id") Long id);
+    @Query(value = """
+            SELECT *
+            FROM VEHICULO
+            WHERE PLACA_VEHICULO = :placa
+            """, nativeQuery = true)
+    Vehiculo porPlaca(@Param("placa") String placa);
 }

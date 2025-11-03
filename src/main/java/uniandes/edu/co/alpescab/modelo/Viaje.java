@@ -25,7 +25,7 @@ public class Viaje {
     @Column(name = "HORA_INICIO", nullable = false, length = 5)
     private String horaInicio; // formato "HH:MM"
 
-    @Column(name = "HORA_FIN", nullable = false, length = 5)
+    @Column(name = "HORA_FIN", nullable = true, length = 5)
     private String horaFin;    // formato "HH:MM"
 
     @Column(name = "DISTANCIA_KM", nullable = false, precision = 9, scale = 3)
@@ -64,12 +64,14 @@ public class Viaje {
 
     public Long getId() { return id; }
     public Usuario getConductor() { return conductor; }
+    public Long getIdConductor() { return conductor != null ? conductor.getId() : null; }
     public Vehiculo getVehiculo() { return vehiculo; }
     public String getHoraInicio() { return horaInicio; }
     public String getHoraFin() { return horaFin; }
     public BigDecimal getDistanciaKm() { return distanciaKm; }
     public BigDecimal getCostoTotal() { return costoTotal; }
     public Servicio getServicio() { return servicio; }
+    public Long getIdServicio() { return servicio != null ? servicio.getId() : null; }
     public BigDecimal getGananciaConductor() { return gananciaConductor; }
     public LocalDate getFecha() { return fecha; }
 

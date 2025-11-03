@@ -44,4 +44,11 @@ public interface TarjetaRepository extends JpaRepository<Tarjeta, Long> {
     @Modifying @Transactional
     @Query(value = "DELETE FROM TARJETA WHERE ID_TARJETA=:id", nativeQuery = true)
     void eliminar(@Param("id") Long id);
+
+     @Query(value = """
+            SELECT *
+            FROM TARJETA
+            WHERE ID_USUARIO = :idUsuario
+            """, nativeQuery = true)
+    Tarjeta porUsuario(@Param("idUsuario") Long idUsuario);
 }

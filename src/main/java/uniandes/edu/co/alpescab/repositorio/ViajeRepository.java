@@ -68,4 +68,23 @@ public interface ViajeRepository extends JpaRepository<Viaje, Long> {
     @Modifying @Transactional
     @Query(value = "DELETE FROM VIAJE WHERE ID_VIAJE = :id", nativeQuery = true)
     void eliminar(@Param("id") Long id);
+
+     @Modifying
+    @Transactional
+    @Query(value = """
+        UPDATE VIAJE
+        SET HORA_FIN = :horaFin,
+            DISTANCIA_KM = :distanciaKm,
+            COSTO_TOTAL = NVL(:costoTotal, COSTO_TOTAL),
+            GANANCIA_CONDUCTOR = NVL(:gananciaConductor, GANANCIA_CONDUCTOR)
+        WHERE ID_VIAJE = :idViaje
+        AND ID_CONDUCTOR = :idConductor
+        AND HORA_FIN IS NULL
+        """, nativeQuery = true)
+    int finalizarViaje(@Param("idViaje") Long idViaje,
+                        @Param("idConductor") Long idConductor,
+                        @Param("horaFin") String horaFin,
+                        @Param("distanciaKm") Integer distanciaKm,
+                        @Param("costoTotal") Integer costoTotal,          
+                        @Param("gananciaConductor") Integer gananciaConductor);
 }
