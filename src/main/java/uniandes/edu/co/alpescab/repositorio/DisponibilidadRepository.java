@@ -56,4 +56,32 @@ public interface DisponibilidadRepository extends JpaRepository<Disponibilidad, 
         @Param("idActual") Long idActual
     );
 
+    @Query(value = """
+        SELECT *
+        FROM DISPONIBILIDAD d
+        WHERE d.TIPO_SERVICIO = :tipoServicio
+        ORDER BY d.ID_DISPONIBILIDAD
+        FETCH FIRST 1 ROWS ONLY
+        """, nativeQuery = true)
+    Disponibilidad primeraPorTipo(String tipoServicio);
+
+    @Modifying
+    @Query(value = """
+        INSERT INTO DISPONIBILIDAD (
+            ID_DISPONIBILIDAD, DIA_SEMANA, HORA_INICIO, HORA_FIN,
+            TIPO_SERVICIO, ID_CONDUCTOR, PLACA_VEHICULO
+        ) VALUES (
+            NVL(?1, SEQ_DISPONIBILIDAD.NEXTVAL), ?2, ?3, ?4, ?5, ?6, ?7
+        )
+        """, nativeQuery = true)
+    int insertarDisponibilidad(
+        Long idDisponibilidadNullable,     
+        String diaSemana,                   
+        String horaInicio,                  
+        String horaFin,                     
+        String tipoServicio,               
+        Long idConductor,
+        String placaVehiculo
+    );
+
 }
