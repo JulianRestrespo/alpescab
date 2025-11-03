@@ -14,7 +14,7 @@ import uniandes.edu.co.alpescab.repositorio.EntregaComidaRepository;
 import uniandes.edu.co.alpescab.repositorio.MercanciaRepository;
 import uniandes.edu.co.alpescab.repositorio.PuntoGeograficoRepository;
 import uniandes.edu.co.alpescab.repositorio.ServicioRepository;
-
+ 
 import java.util.Collection;
 
 @RestController
